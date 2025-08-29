@@ -1,14 +1,14 @@
 export interface Friend {
 	title: string;
 	url: string;
-	description: string;
+	description?: string;
 	avatar?: string;
 }
 
 export const insights: Friend[] = [
 	{
 		title: "上海交通大学生存手册",
-		description: "真正的大学生第一课。另可以找到<strong>免费</strong>的 PDF 版本。",
+		description: "真正的大学生第一课。另可找到<strong>免费</strong> PDF 版本。",
 		url: "https://survivesjtu.gitbook.io/survivesjtumanual",
 	},
 	{
@@ -21,24 +21,26 @@ export const insights: Friend[] = [
 export const friends: Friend[] = [
 	{
 		title: "cclvi256",
-		avatar: "/icon.ico",
 		url: "https://cclvi.cc/",
-		description: "",
+		avatar: "/linkx/cclvi256.jpg",
+		description: "猫猫",
 	},
 	{
 		title: "VaalaCat",
-		avatar: "https://vaala.cat/images/blog/avatar.png",
+		avatar: "/linkx/vaalacat.jpg",
 		url: "https://vaala.cat/",
-		description: "",
+		description: "猫猫",
 	},
 	{
 		title: "寅默",
 		url: "https://blog.yinmo19.top/",
-		description: "",
+		avatar: "/linkx/yinmo.jpg",
+		description: "大神",
 	},
 	{
 		title: "Saurlax",
 		url: "https://saurlax.com/",
+		avatar: "/linkx/saurlax.jpg",
 		description: "建站导师",
 	},
 ];
@@ -46,8 +48,14 @@ export const friends: Friend[] = [
 export const communities: Friend[] = [
 	{
 		title: "HITSZ 自动化课程攻略共享计划",
-		description: "",
+		description: "一份全面的课程攻略，即将加入计算机专业内容。<br>欢迎关注支持！",
 		avatar: "https://hoa.moe/images/logo.webp",
 		url: "https://hoa.moe/",
 	},
+	{
+		title: "SYSU-SAA-Survival-Manual",
+		description: "中山大学航空航天学院生存手册",
+		avatar: "/linkx/SYSU-SAA.png",
+		url: "https://yigebande.github.io/SYSU-SAA-Survival-Manual/",
+	}
 ];

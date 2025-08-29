@@ -14,8 +14,8 @@
 	--color-accent: oklch(55.27% 0.195 19.06);
 	--color-accent-2: oklch(18.15% 0 0);
 	--color-quote: oklch(55.27% 0.195 19.06);
-	--theme-card-bg: #ffffff; /* 卡片背景色 (亮色) */
-    --theme-divider: #e2e8f0; /* 分割线颜色 (亮色) */
+	--theme-card-bg: #aacfe9; /* 卡片背景色 (亮色) */
+    --theme-divider: #b6d47e; /* 分割线颜色 (亮色) */
     --theme-text-light: #4a5568; /* 描述文字颜色 (亮色) */
 }
 

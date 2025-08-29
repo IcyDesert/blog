@@ -5,13 +5,11 @@ import { insights, friends, communities, type Friend } from "@/data/friends";
 const pageTitle = "友链";
 
 const FriendCard = (friend: Friend) => {
-	const avatarHtml = friend.avatar
-		? `<img src="${friend.avatar}" alt="${friend.title} Avatar" class="friend-avatar" />`
-		: "";
+	const avatarSrc = friend.avatar ? friend.avatar : "/blog-default.svg";
 
 	return `
 		<a href="${friend.url}" target="_blank" rel="noopener noreferrer" class="friend-card">
-			${avatarHtml}
+			<img src="${avatarSrc}" alt="${friend.title} Avatar" class="friend-avatar" />
 			<div class="friend-info">
 				<h3 class="friend-title">${friend.title}</h3>
 				<p class="friend-description">${friend.description}</p>
@@ -44,7 +42,7 @@ const meta = {
 	</section>
 </Base>
 
-<style>
+<style is:global>
 	.page-title {
 		font-size: 2rem;
 		font-weight: 700;
@@ -69,9 +67,9 @@ const meta = {
 
 	.friend-card {
 		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.75rem;
+		flex-direction: row;
+		align-items: center;
+		gap: 1rem;
 		padding: 1.25rem;
 		border-radius: 8px;
 		background-color: var(--theme-card-bg);
@@ -93,7 +91,7 @@ const meta = {
 		height: 50px;
 		border-radius: 8px;
 		object-fit: cover;
-		margin-bottom: 0.5rem;
+		flex-shrink: 0;
 	}
 
 	.friend-info {
