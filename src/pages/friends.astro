@@ -1,0 +1,122 @@
+---
+import Base from "@/layouts/Base.astro";
+import { insights, friends, communities, type Friend } from "@/data/friends";
+
+const pageTitle = "友链";
+
+const FriendCard = (friend: Friend) => {
+	const avatarSrc = friend.avatar ? friend.avatar : "/blog-default.svg";
+	const description = friend.description ? friend.description : "";
+
+	return `
+		<a href="${friend.url}" target="_blank" rel="noopener noreferrer" class="friend-card">
+			<img src="${avatarSrc}" alt="${friend.title} Avatar" class="friend-avatar" />
+			<div class="friend-info">
+				<h4 class="friend-title">${friend.title}</h4>
+				<p class="friend-description">${description}</p>
+			</div>
+		</a>
+	`;
+};
+const meta = {
+	title: pageTitle,
+	description: "IcyDesert's friends",
+};
+---
+
+<Base meta={meta}>
+	<h1 class="page-title">{pageTitle}</h1>
+
+	<section>
+		<h2 class="section-title">见解</h2>
+		<div class="friend-grid" set:html={insights.map((friend) => FriendCard(friend)).join("")} />
+	</section>
+
+	<section>
+		<h2 class="section-title">友人</h2>
+		<div class="friend-grid" set:html={friends.map((friend) => FriendCard(friend)).join("")} />
+	</section>
+
+	<section>
+		<h2 class="section-title">社群</h2>
+		<div class="friend-grid" set:html={communities.map((friend) => FriendCard(friend)).join("")} />
+	</section>
+</Base>
+
+<style is:global>
+	.page-title {
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 2rem;
+		text-align: center;
+	}
+
+	.section-title {
+		font-size: 1.5rem;
+		font-weight: 600;
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+		border-bottom: 2px solid var(--theme-divider);
+		padding-bottom: 0.5rem;
+	}
+
+	.friend-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.friend-card {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.6rem;
+		border-radius: 20px;
+		background-color: var(--theme-card-bg);
+		border: 1px solid var(--theme-divider);
+		transition:
+			transform 0.2s ease-in-out,
+			box-shadow 0.2s ease-in-out;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.friend-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.friend-avatar {
+		width: 50px;
+		height: 50px;
+		border-radius: 8px;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	.friend-info {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		text-align: left;
+	}
+
+	.friend-title {
+		font-size: 1rem;
+		font-weight: 500;
+		margin: 0;
+	}
+
+	.friend-description {
+		font-size: 1rem;
+		margin: 0.25rem 0 0;
+		color: var(--theme-text-light);
+	}
+
+	@media (max-width: 640px) {
+		.friend-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
