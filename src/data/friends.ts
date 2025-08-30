@@ -42,7 +42,7 @@ export const friends: Friend[] = [
 	{
 		title: "BBB",
 		url: "https://dingbangliu.codeberg.page/",
-		avatar: "/linkx/bbb.jpg",
+		avatar: "/linkx/BBB.jpg",
 	},
 	{	
 		title: "Kokoro",
