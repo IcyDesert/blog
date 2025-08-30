@@ -39,6 +39,16 @@ export const friends: Friend[] = [
 		url: "https://saurlax.com/",
 		avatar: "/linkx/saurlax.jpg",
 	},
+	{
+		title: "BBB",
+		url: "https://dingbangliu.codeberg.page/",
+		avatar: "/linkx/bbb.jpg",
+	},
+	{	
+		title: "Kokoro",
+		url: "https://github.com/Kokoro2336",
+		avatar: "/linkx/Kokoro.jpg",
+	}
 ];
 
 export const communities: Friend[] = [
