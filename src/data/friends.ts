@@ -63,5 +63,11 @@ export const communities: Friend[] = [
 		description: "中山大学航空航天学院生存手册",
 		avatar: "/linkx/SYSU-SAA.png",
 		url: "https://yigebande.github.io/SYSU-SAA-Survival-Manual/",
+	},
+	{
+		url: "https://osa.moe/",
+		title: "HITSZ OSA",
+		description: "a.k.a Open Source Association<br>HITSZ 开源技术协会",
+		avatar: "/linkx/OSA.svg",
 	}
 ];
