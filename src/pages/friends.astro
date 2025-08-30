@@ -6,13 +6,14 @@ const pageTitle = "友链";
 
 const FriendCard = (friend: Friend) => {
 	const avatarSrc = friend.avatar ? friend.avatar : "/blog-default.svg";
+	const description = friend.description ? friend.description : "";
 
 	return `
 		<a href="${friend.url}" target="_blank" rel="noopener noreferrer" class="friend-card">
 			<img src="${avatarSrc}" alt="${friend.title} Avatar" class="friend-avatar" />
 			<div class="friend-info">
-				<h3 class="friend-title">${friend.title}</h3>
-				<p class="friend-description">${friend.description}</p>
+				<h4 class="friend-title">${friend.title}</h4>
+				<p class="friend-description">${description}</p>
 			</div>
 		</a>
 	`;
@@ -70,8 +71,8 @@ const meta = {
 		flex-direction: row;
 		align-items: center;
 		gap: 1rem;
-		padding: 1.25rem;
-		border-radius: 8px;
+		padding: 0.6rem;
+		border-radius: 20px;
 		background-color: var(--theme-card-bg);
 		border: 1px solid var(--theme-divider);
 		transition:
@@ -102,8 +103,8 @@ const meta = {
 	}
 
 	.friend-title {
-		font-size: 1.4rem;
-		font-weight: 700;
+		font-size: 1rem;
+		font-weight: 500;
 		margin: 0;
 	}
 

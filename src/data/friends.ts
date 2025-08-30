@@ -44,7 +44,7 @@ export const friends: Friend[] = [
 export const communities: Friend[] = [
 	{
 		title: "HITSZ 自动化课程攻略共享计划",
-		description: "一份全面的课程攻略，即将加入计算机专业内容。<br>欢迎关注支持！",
+		description: "一份全面的课程攻略，同时包含计算机专业内容。<br>欢迎关注支持！",
 		avatar: "https://hoa.moe/images/logo.webp",
 		url: "https://hoa.moe/",
 	},
