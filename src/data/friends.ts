@@ -23,25 +23,21 @@ export const friends: Friend[] = [
 		title: "cclvi256",
 		url: "https://cclvi.cc/",
 		avatar: "/linkx/cclvi256.jpg",
-		description: "猫猫",
 	},
 	{
 		title: "VaalaCat",
 		avatar: "/linkx/vaalacat.jpg",
 		url: "https://vaala.cat/",
-		description: "猫猫",
 	},
 	{
 		title: "寅默",
 		url: "https://blog.yinmo19.top/",
 		avatar: "/linkx/yinmo.jpg",
-		description: "大神",
 	},
 	{
 		title: "Saurlax",
 		url: "https://saurlax.com/",
 		avatar: "/linkx/saurlax.jpg",
-		description: "建站导师",
 	},
 ];
 
