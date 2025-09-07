@@ -12,6 +12,7 @@ Astro Cactus is a simple opinionated starter built with [Astro](https://astro.bu
 webmentions
 跳动 quote
 冰原沙漠背景
+bash 加 ￥
 
 ## Table Of Contents
 
