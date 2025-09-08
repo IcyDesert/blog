@@ -2,21 +2,21 @@
 title: "多个蓝牙鼠标灵敏度自动切换"
 description: "AI coding 成功案例"
 publishDate: "05 Sep 2025"
-# updatedDate: "4 July 2025"
+updatedDate: "08 Sep 2025"
 tags: ["auto"]
 ---
 
 ## 前置
 
 - 多个鼠标
-- Linux 系统
+- 有桌面系统的 Linux 系统
     - Windows 不知有没有这种接口
 
 ## 背景
 
 直接放上我给 Gemini 2.5 Pro 的前半段提示词：
 
-> 我有两个鼠标分别放在 宿舍和教学楼。它们自身灵敏度不同，所以电脑的鼠标灵敏度调节必须来回切换才能达到我的顺手需求。我现在想做个自动化脚本控制
+> 我有两个鼠标分别放在 宿舍和教学楼。它们自身灵敏度不同，所以笔记本电脑的鼠标灵敏度调节必须来回切换才能达到我的顺手需求。我现在想做个自动化脚本控制
 
 其实构想起来还是很简单的，无非是*先确认蓝牙型号，如果是需要调整的蓝牙鼠标则调节灵敏度*。所以我也向 AI 提供了我的思路
 
@@ -70,17 +70,17 @@ xinput set-prop "dorm" "libinput Accel Speed" 0.8
 
 最终的灵敏度确定为：
 - dorm: 0.80
-- teac: -0.17
+- teac: -0.20
 
 做完上面两步，我们才能开始和系统打交道：
 
 #### 创建事件驱动规则
 
-至于第一个疑问，Linux 有一个服务 `udev` 监测设备状态——那么自然是事件驱动型了，触发事件是**蓝牙连接**。`udev` 支持自己创建事件驱动的规则，[这里](https://man.archlinux.org/man/udev.7) 写的非常详细了。
+至于第一个疑问，Linux 有一个服务 `udev` 监测设备状态——那么自然是事件驱动型了，触发事件是**蓝牙连接**。`udev` 支持自己创建事件驱动的规则，[文档里](https://man.archlinux.org/man/udev.7) 写的非常详细了。
 
 在 `/etc/udev/rules.d` 下创建规则文件 `99-bluetooth-mouse.rules`。这个文件名是 AI 给我起的、我直接用了，但文档好像没提到文件名的影响；
 
-> A matching rule may rename a network interface, add symlinks pointing to the device node, or **run a specified program as part of the event handling**.
+> A matching rule may ..... or **run a specified program as part of the event handling**.
 
 看来我们目前在正确的道路上。接着看看 AI 说什么：
 
@@ -90,7 +90,7 @@ xinput set-prop "dorm" "libinput Accel Speed" 0.8
 ACTION=="add", SUBSYSTEM=="input", ATTR{uniq}=="d:o:r:m", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/你的用户名/.Xauthority", RUN+="/bin/sh -c 'echo /usr/bin/xinput set-prop \"dorm\" \"libinput Accel Speed\" 0.80 | at now + 2 seconds'"
 
 # 规则2: 教学楼蓝牙鼠标
-ACTION=="add", SUBSYSTEM=="input", ATTR{uniq}=="t:e:a:c", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/你的用户名/.Xauthority", RUN+="/bin/sh -c 'echo /usr/bin/xinput set-prop \"teac\" \"libinput Accel Speed\" -0.17 | at now + 2 seconds'"
+ACTION=="add", SUBSYSTEM=="input", ATTR{uniq}=="t:e:a:c", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/你的用户名/.Xauthority", RUN+="/bin/sh -c 'echo /usr/bin/xinput set-prop \"teac\" \"libinput Accel Speed\" -0.20 | at now + 2 seconds'"
 ```
 
 前面应该是一些匹配事件所用的（后面有印证），关键点在于 RUN 里的命令
@@ -102,9 +102,12 @@ ACTION=="add", SUBSYSTEM=="input", ATTR{uniq}=="t:e:a:c", ENV{DISPLAY}=":0", ENV
 - `| at now + 2 seconds`
 at 是一个控制**命令**执行时刻的程序，和 cron 有点像但 at 只运行一次。命令需要通过管道符传给 at。
 
+#### 该实现的大致思路
+
 那么这个规则的意思就是：
 
 当
+
 - udev 检测到有设备加入
 - 且设备 ATTR{uniq} 属性为我们想要的鼠标 MAC 地址
 
@@ -117,10 +120,12 @@ at 是一个控制**命令**执行时刻的程序，和 cron 有点像但 at 只
 
 这就是一开始我给 AI 定的大致思路.
 
-最后的最后，只需要重载一下 udev 规则即可
+:::important
+每次修改 udev 规则以后，都需要重载一下 udev 规则
 ```bash
 sudo udevadm control --reload-rules
 ```
+:::
 
 听起来非常完美。但是，
 
@@ -128,7 +133,7 @@ sudo udevadm control --reload-rules
 
 #### 验证事件监听生效
 
-为了测试，我将原来连接的 dorm 鼠标电源关闭，teac 打开（这两个都早已配对+信任，自动连接的），预期是 -0.17
+为了测试，我将原来连接的 dorm 鼠标电源关闭，teac 打开（这两个都早已配对+信任，自动连接的），预期是 -0.20
 
 > libinput Accel Speed (345):     0.800000
 > 并没有调整。
@@ -150,13 +155,12 @@ UNIQ="t:e:a:c" ###
 注意这里 ACTION SUBSYSTEM NAME UNIQ 等，和我们所写的（硬编码）匹配规则一一对应。
 ~~你参数多，读的文档和 issues 多，信你~~ 调节失败了。
 
-为了验证规则确实能匹配鼠标、能执行命令，我先在 RUN 的指令里加上日志
+我又在 RUN 的指令里加上日志，进一步验证了事件的匹配成功
 ```bash
-/bin/sh -c 'echo \"Rule triggered for mouse at $(date)\" >> /tmp/udev_test.log; echo /usr/bin/xinput set-prop \"teac\" \"libinput Accel Speed\" -0.17 | at now + 2 seconds'"
+/bin/sh -c 'echo \"Rule triggered for mouse at $(date)\" >> /tmp/udev_test.log; echo /usr/bin/xinput set-prop \"teac\" \"libinput Accel Speed\" -0.20 | at now + 2 seconds'"
 ```
-以及每次修改规则文件后都需要用 `sudo udevadm control --reload-rules` 刷新规则集。
 
-> 我现在在做联调。当我在两个鼠标间切换时，日志有显示新的连接信号，但是灵敏度并没有调节
+> 当我在两个鼠标间切换时，日志有显示新的连接信号，但是灵敏度并没有调节
 
 #### 修改调节灵敏度命令
 
@@ -164,30 +168,52 @@ UNIQ="t:e:a:c" ###
 >
 > 解决方案：放弃 at，直接执行文件脚本
 
-1. 专用的设置灵敏度的脚本文件。 `sudo -u "$USERNAME"` 可以确保脚本在我的用户环境下执行。
+1. 专用的设置灵敏度的脚本文件。
 ```sh
 #!/bin/bash
 # /usr/local/bin/set-mouse-speed.sh
 ########## 最终版本 ##########
+
 DEVICE_NAME="$1"
 SENSITIVITY="$2"
 USERNAME="icydesert"
 
-# Delay to ensure the device is ready in the X server
-sleep 2
+# 等待属于用户的桌面会话就绪（区别于锁屏）
+sleep 5
 
-# Run the xinput command as the graphical user
-# 'sudo -u' switches user
-sudo -u "$USERNAME" DISPLAY=:0 /usr/bin/xinput set-prop "$DEVICE_NAME" "libinput Accel Speed" "$SENSITIVITY"
+# --- 智能查找用户图形环境 ---
+get_user_env() {
+    local user_pid
+    user_pid=$(pgrep -u "$USERNAME" -f "gnome-shell" | head -n 1)
+    if [ -n "$user_pid" ]; then
+        # 智能确定环境变量
+        export DISPLAY=$(grep -z DISPLAY /proc/"$user_pid"/environ | tr -d '\0' | sed 's/DISPLAY=//')
+        export XAUTHORITY=$(grep -z XAUTHORITY /proc/"$user_pid"/environ | tr -d '\0' | sed 's/XAUTHORITY=//')
+    else
+        # 如果找不到，则使用备用方案
+        export DISPLAY=:0
+        export XAUTHORITY="/home/$USERNAME/.Xauthority"
+    fi
+}
 
+# 设置环境变量
+get_user_env
+
+# 以用户身份，使用找到的环境变量来执行 xinput
+sudo -u "$USERNAME" DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY /usr/bin/xinput set-prop "$DEVICE_NAME" "libinput Accel Speed" "$SENSITIVITY"
 ### 当然，还得给此文件执行权限
 ```
+
+脚本里最关键的前置就是 `sleep 5`。因为各个图形会话相互独立，在锁屏会话设置的灵敏度**不会共享给桌面会话**，所以**必须**等待我输入密码、进入桌面以后，才能执行智能函数。
+
+ `sudo -u "$USERNAME"` 可以确保脚本在我的用户环境下执行。
+
 
 2. 修改规则集。监测到事件后，只需要执行上面脚本。
 ```txt
 # filepath: /etc/udev/rules.d/99-bluetooth-mouse.rules
 # teaching building, older one: CD23 C
-ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="teac", RUN+="/usr/local/bin/set-mouse-speed.sh 'teac' '-0.17'"
+ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="teac", RUN+="/usr/local/bin/set-mouse-speed.sh 'teac' '-0.20'"
 
 # dorm, newer one: CD23 SE
 ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="dorm", RUN+="/usr/local/bin/set-mouse-speed.sh 'dorm' '0.80'"
@@ -218,7 +244,7 @@ ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="dorm", RUN+="/usr/local/bin/set
 # filepath: /etc/udev/rules.d/99-bluetooth-mouse.rules
 ######### 最终脚本 #########
 # teaching building
-ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="teac", RUN+="/bin/sh -c '/usr/local/bin/set-mouse-speed.sh \teac\" -0.17 &'"
+ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="teac", RUN+="/bin/sh -c '/usr/local/bin/set-mouse-speed.sh \teac\" -0.20 &'"
 
 # dorm, newer one
 ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="dorm", RUN+="/bin/sh -c '/usr/local/bin/set-mouse-speed.sh \"dorm\" 0.80 &'"
@@ -226,3 +252,9 @@ ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="dorm", RUN+="/bin/sh -c '/usr/l
 此处 `&` 表示该脚本会后台执行；同时，它会立即返回结果，不阻塞 udev 的后续识别。
 
 完成！
+
+### 讨论
+
+脚本依赖于 `sleep 5` 前置，坏消息是这***十分灵车***，好消息是灵车是摇摇车。只要我登进系统发现鼠标还是不好使，再断开重新连接就行。因为这是个人脚本所以我对有感操作比较无感，这就是工程的魅力（
+
+另外同样由于上面所说的会话独立原因，else 分支实际上是无效的。~~懒得改了~~
