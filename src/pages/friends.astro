@@ -6,14 +6,16 @@ const pageTitle = "友链";
 
 const FriendCard = (friend: Friend) => {
 	const avatarSrc = friend.avatar ? friend.avatar : "/blog-default.svg";
-	const description = friend.description ? friend.description : "";
+	const descriptionHtml = friend.description
+		? `<p class="friend-description">${friend.description}</p>`
+		: "";
 
 	return `
 		<a href="${friend.url}" target="_blank" rel="noopener noreferrer" class="friend-card">
 			<img src="${avatarSrc}" alt="${friend.title} Avatar" class="friend-avatar" />
 			<div class="friend-info">
 				<h4 class="friend-title">${friend.title}</h4>
-				<p class="friend-description">${description}</p>
+				${descriptionHtml}
 			</div>
 		</a>
 	`;
