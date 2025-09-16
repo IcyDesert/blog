@@ -3,10 +3,11 @@ import Search from "@/components/Search.astro";
 import ThemeToggle from "@/components/ThemeToggle.astro";
 import { menuLinks } from "@/site.config";
 import { siteConfig } from "../../site.config";
+import { _quotes } from "@/data/quotes";
 ---
 
 <header class="group relative mb-16 flex items-center sm:ps-18" id="main-header">
-	<div class="flex items-center gap-x-4 sm:flex-row sm:items-center sm:gap-x-8">
+	<div class="flex items-center gap-x-4 sm:flex-row sm:items-center sm:gap-x-7">
 		<a
 			aria-current={Astro.url.pathname === "/" ? "page" : false}
 			class="inline-flex flex-shrink-0 items-center grayscale hover:filter-none sm:relative"
@@ -85,7 +86,8 @@ import { siteConfig } from "../../site.config";
 			</button>
 		</mobile-button>
 	</div>
-	<div id="spalsh"></div>
+	<div class="absolute right-20 -bottom-2 translate-x-1/2 -translate-y-1/2 -rotate-24" id="splash">
+	</div>
 
 	<script>
 		import { toggleClass } from "@/utils/domElement";
@@ -107,9 +109,7 @@ import { siteConfig } from "../../site.config";
 
 		customElements.define("mobile-button", MobileNavBtn);
 	</script>
-	<script>
-		import { _quotes } from "@/data/quotes";
-
+	<script define:vars={{ _quotes }}>
 		const quoteElement = document.getElementById("splash");
 		if (quoteElement) {
 			const quotes = JSON.parse(
