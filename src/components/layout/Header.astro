@@ -86,7 +86,10 @@ import { _quotes } from "@/data/quotes";
 			</button>
 		</mobile-button>
 	</div>
-	<div class="absolute right-20 -bottom-2 translate-x-1/2 -translate-y-1/2 -rotate-24" id="splash">
+	<div
+		class="animate-pulse-font absolute right-20 -bottom-2 translate-x-1/2 -translate-y-1/2 -rotate-24"
+		id="splash"
+	>
 	</div>
 
 	<script>
@@ -120,3 +123,15 @@ import { _quotes } from "@/data/quotes";
 		}
 	</script>
 </header>
+
+<style>
+	@keyframes pulse-font {
+		50% {
+			transform: scale(1.1);
+		}
+	}
+	.animate-pulse-font {
+		animation: pulse-font 0.7s ease-in-out 50;
+		will-change: transform;
+	}
+</style>
