@@ -85,6 +85,7 @@ import { siteConfig } from "../../site.config";
 			</button>
 		</mobile-button>
 	</div>
+	<div id="spalsh"></div>
 
 	<script>
 		import { toggleClass } from "@/utils/domElement";
@@ -105,5 +106,17 @@ import { siteConfig } from "../../site.config";
 		}
 
 		customElements.define("mobile-button", MobileNavBtn);
+	</script>
+	<script>
+		import { _quotes } from "@/data/quotes";
+
+		const quoteElement = document.getElementById("splash");
+		if (quoteElement) {
+			const quotes = JSON.parse(
+				new TextDecoder().decode(Uint8Array.from(atob(_quotes), (c) => c.charCodeAt(0))),
+			);
+			const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+			quoteElement.textContent = randomQuote;
+		}
 	</script>
 </header>
