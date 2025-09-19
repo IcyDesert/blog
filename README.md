@@ -7,6 +7,13 @@
 
 Astro Cactus is a simple opinionated starter built with [Astro](https://astro.build). Use it to create an easy-to-use blog or website.
 
+## TODO
+友链样式
+webmentions
+跳动 quote
+冰原沙漠背景
+bash 加 ￥
+
 ## Table Of Contents
 
 1. [Key Features](#key-features)
