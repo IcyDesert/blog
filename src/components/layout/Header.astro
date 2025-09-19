@@ -126,9 +126,8 @@ import { _quotes } from "@/data/quotes";
 			quoteElement.textContent = randomQuote;
 
 			if (/[\u4e00-\u9fa5]/.test(randomQuote)) {
-				// 如果是中文，移除 text-lg 并应用 text-sm
 				quoteElement.classList.remove("text-lg");
-				quoteElement.classList.add("text-sm");
+				quoteElement.classList.add("text-xs");
 			}
 		}
 	</script>
