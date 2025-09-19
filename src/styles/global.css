@@ -87,3 +87,11 @@
 	--tw-prose-quotes: var(--color-quote);
 	--tw-prose-th-borders: #666;
 }
+
+@font-face {
+  font-family: 'Unifont';
+  src: url('../assets/UnifontExMono.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
