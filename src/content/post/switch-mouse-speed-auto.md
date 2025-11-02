@@ -1,9 +1,9 @@
 ---
-title: "多个蓝牙鼠标灵敏度自动切换"
+title: "多蓝牙鼠标切换时自动更新系统灵敏度"
 description: "AI coding 成功案例"
 publishDate: "05 Sep 2025"
 updatedDate: "08 Sep 2025"
-tags: ["auto"]
+tags: ["auto", "折腾"]
 ---
 
 ## 前置
