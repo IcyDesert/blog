@@ -1,8 +1,8 @@
 ---
 title: "赛格雅思纸笔考场考试经历"
 description: "地图爱好者の神秘回忆"
-publishDate: 24 Oct 2025
-tags: ["雅思", "英语学习"]
+publishDate: 02 Nov 2025
+tags: ["雅思", "地图"]
 ---
 
 供参考，如有疏漏之处可联系作者。
