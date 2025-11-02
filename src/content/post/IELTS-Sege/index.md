@@ -73,13 +73,19 @@ tags: ["雅思", "英语学习"]
 #### Part1
 
 > Do you work or are you a student?
+>
 > Why do you choose robotics?
+>
 > 你学习时候是怎么克服障碍的？
+>
 > ......
 
 > 雅思 感恩话题
+>
 > Do people in your country often say thankyou?
+>
 > Have you given a thankyou-card to others?
+>
 > ......
 
 > ......
@@ -88,9 +94,7 @@ tags: ["雅思", "英语学习"]
 
 事实上考官在给你**看题目之后、计时之前**，会念一段东西，这段大约 20s 的时间也是可以看题的。虽然不知道会不会对成绩有影响，但我看到题目下意识就盯着屏幕了，没有理会考官。
 
-> Describe an interesting conversation that you had. You should talk about:
-> > ...
->
+> Describe an interesting conversation that you had. You should talk about ...
 
 讲完以后，考官追问：
 
@@ -107,10 +111,15 @@ tags: ["雅思", "英语学习"]
 大概有六七个问题。
 
 > 你觉得电子时代交流减少了吗？
+>
 > 你觉得这会对人们有什么影响？
+>
 > 在你们国家，小孩子们通常交流什么？
+>
 > 你觉得工作中交流重要吗？
+>
 > （根据我的回答）交流是如何促进工作效率的？
+>
 > ...
 
 ### 结束！
@@ -153,4 +162,4 @@ tags: ["雅思", "英语学习"]
 
 空调觉得冷可以和监考人员说。
 
-只有写作文时可以上厕所，只能去出口电梯旁的那个；去程和回程都需要进行金属扫描检查，到了考场还要再被盘问一遍，总之费时间 ~5min。我是先看了一会作文找到大概的思路。
+只有写作文时可以上厕所，只能去出口电梯旁的那个；去程和回程都需要进行金属扫描检查，回到考场还要再被盘问一遍，总之费时间 ~5min。我是先看了一会作文找到大概的思路再去的。
