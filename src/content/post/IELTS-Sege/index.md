@@ -14,7 +14,7 @@ tags: ["雅思", "英语学习"]
 
 现在来看看 11 楼考场的内部构造吧！
 <figure>
-    <img src="./map.jpg" alt="考场地图">
+    <img src="/images/posts/IELTS-Sege/map.jpg" alt="考场地图">
     <figcaption>地图热爱者的奇怪关注点哈哈哈</figcaption>
 </figure>
 
@@ -58,7 +58,7 @@ tags: ["雅思", "英语学习"]
 房间大概是单人房大小，空调会在背后吹，可以用遥控板调温度；内部构造是这样的：
 
 <figure>
-    <img src="./spoken.jpg" alt="口试房间内部">
+    <img src="/images/posts/IELTS-Sege/spoken.jpg" alt="口试房间内部">
     <figcaption>灵魂画手</figcaption>
 </figure>
 
