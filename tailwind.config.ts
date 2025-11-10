@@ -4,6 +4,30 @@ export default {
 	plugins: [require("@tailwindcss/typography")],
 	theme: {
 		extend: {
+			fontFamily: {
+				sans: [
+                    "Microsoft YaHei",
+                    "Microsoft YaHei UI",
+                    "微软雅黑",
+                    "Segoe UI",
+                    "system-ui",
+                    "ui-sans-serif",
+                    "sans-serif",
+                    "Apple Color Emoji",
+                    "Segoe UI Emoji",
+                    "Segoe UI Symbol",
+                    "Noto Color Emoji",
+                ],
+                mono: [
+                    "ui-monospace",
+                    "SFMono-Regular",
+                    "Menlo",
+                    "Monaco",
+                    "Consolas",
+                    "\"Liberation Mono\"",
+                    "\"Courier New\"",
+                    "monospace",
+                ],
 			typography: () => ({
 				DEFAULT: {
 					css: {
