@@ -19,36 +19,36 @@ export const insights: Friend[] = [
 ];
 
 export const friends: Friend[] = [
-	{
-		title: "cclvi256",
-		url: "https://cclvi.cc/",
-		avatar: "/linkx/cclvi256.jpg",
-	},
-	{
-		title: "VaalaCat",
-		avatar: "/linkx/vaalacat.jpg",
-		url: "https://vaala.cat/",
-	},
-	{
-		title: "寅默",
-		url: "https://blog.yinmo19.top/",
-		avatar: "/linkx/yinmo.jpg",
-	},
-	{
-		title: "Saurlax",
-		url: "https://saurlax.com/",
-		avatar: "/linkx/saurlax.jpg",
-	},
-	{
-		title: "BBB",
-		url: "https://dingbangliu.codeberg.page/",
-		avatar: "/linkx/BBB.jpg",
-	},
-	{	
-		title: "Kokoro",
-		url: "https://github.com/Kokoro2336",
-		avatar: "/linkx/Kokoro.jpg",
-	}
+	// {
+	// 	title: "cclvi256",
+	// 	url: "https://cclvi.cc/",
+	// 	avatar: "/linkx/cclvi256.jpg",
+	// },
+	// {
+	// 	title: "VaalaCat",
+	// 	avatar: "/linkx/vaalacat.jpg",
+	// 	url: "https://vaala.cat/",
+	// },
+	// {
+	// 	title: "寅默",
+	// 	url: "https://blog.yinmo19.top/",
+	// 	avatar: "/linkx/yinmo.jpg",
+	// },
+	// {
+	// 	title: "Saurlax",
+	// 	url: "https://saurlax.com/",
+	// 	avatar: "/linkx/saurlax.jpg",
+	// },
+	// {
+	// 	title: "BBB",
+	// 	url: "https://dingbangliu.codeberg.page/",
+	// 	avatar: "/linkx/BBB.jpg",
+	// },
+	// {	
+	// 	title: "Kokoro",
+	// 	url: "https://github.com/Kokoro2336",
+	// 	avatar: "/linkx/Kokoro.jpg",
+	// }
 ];
 
 export const communities: Friend[] = [
