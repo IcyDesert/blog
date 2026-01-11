@@ -28,6 +28,7 @@ export default {
                     "\"Courier New\"",
                     "monospace",
                 ],
+            },
 			typography: () => ({
 				DEFAULT: {
 					css: {
