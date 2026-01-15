@@ -30,7 +30,7 @@ $$dp[i] = dp[i-1] + dp[i-2]$$
 
 $dp[i]$ 表示前 $i$ 间房屋能偷窃到的最高金额。
 
-$$dp[i] = \max(dp[i-1], dp[i-2] + \text{nums}[i])$$
+$$dp[i] = \max(dp[i-1], dp[i-2] + \text\{nums\}[i])$$
 
 </div>
 
@@ -42,7 +42,7 @@ $$dp[i] = \max(dp[i-1], dp[i-2] + \text{nums}[i])$$
 
 $dp[i]$ 表示字符串 $s$ 的前 $i$ 个字符能否被空格拆分为若干个字典中出现的单词。
 
-$$dp[i] = dp[j] \land \text{check}(s[j..i-1])$$
+$$dp[i] = dp[j] \land \text\{check\}(s[j..i-1])$$
 其中 $0 \le j < i$
 
 </div>
@@ -55,7 +55,7 @@ $$dp[i] = dp[j] \land \text{check}(s[j..i-1])$$
 
 $dp[i]$ 表示凑成金额 $i$ 所需的最少硬币个数。
 
-$$dp[i] = \min(dp[i], dp[i - \text{coin}] + 1)$$
+$$dp[i] = \min(dp[i], dp[i - \text\{coin\}] + 1)$$
 
 </div>
 
@@ -82,7 +82,7 @@ $$dp[i] = \max(dp[j]) + 1$$
 
 $dp[i][j]$ 表示到达第 $i$ 行第 $j$ 列元素的最小路径和。
 
-$$dp[i][j] = \min(dp[i-1][j], dp[i-1][j-1]) + \text{triangle}[i][j]$$
+$$dp[i][j] = \min(dp[i-1][j], dp[i-1][j-1]) + \text\{triangle\}[i][j]$$
 
 </div>
 
@@ -94,7 +94,7 @@ $$dp[i][j] = \min(dp[i-1][j], dp[i-1][j-1]) + \text{triangle}[i][j]$$
 
 $dp[i][j]$ 表示到达网格 $(i, j)$ 的最小路径和。
 
-$$dp[i][j] = \min(dp[i-1][j], dp[i][j-1]) + \text{grid}[i][j]$$
+$$dp[i][j] = \min(dp[i-1][j], dp[i][j-1]) + \text\{grid\}[i][j]$$
 
 </div>
 
