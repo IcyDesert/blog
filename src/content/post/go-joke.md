@@ -19,7 +19,7 @@ func min(a, b int) int {
 <details>
 <summary>笑点解析</summary>
 
-1. Go 1.21 之前甚至没有一个内置的 min/max 函数；不过现在加了，支持传数组
+1. Go 1.21 之前甚至没有一个内置的 min/max 函数；现在的版本只支持传离散数据
 2. Go 到现在没有三目运算符
 
 </details>
