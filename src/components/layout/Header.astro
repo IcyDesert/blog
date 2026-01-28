@@ -6,10 +6,6 @@ import { siteConfig } from "../../site.config";
 import { _quotes } from "@/data/quotes";
 ---
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
-
 <header class="group relative mb-16 flex items-center sm:ps-18" id="main-header">
 	<div class="flex items-center gap-x-4 sm:flex-row sm:items-center sm:gap-x-7">
 		<a
@@ -91,7 +87,7 @@ import { _quotes } from "@/data/quotes";
 		</mobile-button>
 	</div>
 	<div
-		class="animate-pulse-font absolute right-20 -bottom-2 hidden translate-x-1/2 -translate-y-1/2 -rotate-24 text-lg sm:block"
+		class="animate-pulse-font absolute right-20 -bottom-2 hidden translate-x-1/2 -translate-y-1/2 -rotate-24 text-2xl sm:block"
 		id="splash"
 	>
 	</div>
@@ -127,7 +123,7 @@ import { _quotes } from "@/data/quotes";
 
 			if (/[\u4e00-\u9fa5]/.test(randomQuote)) {
 				quoteElement.classList.remove("text-lg");
-				quoteElement.classList.add("text-xs");
+				quoteElement.classList.add("text-base");
 			}
 		}
 	</script>
@@ -142,6 +138,6 @@ import { _quotes } from "@/data/quotes";
 	.animate-pulse-font {
 		animation: pulse-font 0.7s ease-in-out 50;
 		will-change: transform;
-		font-family: "VT323", monospace;
+		font-family: "Unifont", monospace;
 	}
 </style>
