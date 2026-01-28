@@ -93,5 +93,5 @@
 	src: url('../assets/unifont-17.0.03.woff2') format('woff2');
 	font-weight: normal;
 	font-style: normal;
-	font-display: optional;
+	font-display: swap;
 }
