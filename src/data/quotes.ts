@@ -8,7 +8,18 @@ const _quotes_: string[] = [
     "Work and rave!",
     "fuzz...buzz...zzz...",
     "Also available on GitHub!",
-    "要致富先砍树！"
+    "要致富先砍树！",
+    "Share Memory By Communicating!",
+    "Don't Panic!",
+    "Stay Hungry, Stay Foolish.",
+    "All paths lead to learning.",
+    "Five hundred miles!",
+    "OpenArchive!",
+    "Now with TypeScript!",
+    "技术性调整！",
+    "Copilot enabled!",
+    "何意味？",
+    "禁飞区！"
 ]
 
 export const _quotes = Buffer.from(JSON.stringify(_quotes_)).toString('base64');

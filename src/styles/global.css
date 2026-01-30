@@ -8,7 +8,7 @@
 
 /* you could refactor below to use light-dark(), depending on your target audience */
 @theme {
-	--color-global-bg: oklch(98.48% 0 0);
+	--color-global-bg: oklch(98.47% 0.007 150);
 	--color-global-text: oklch(26.99% 0.0096 235.05);
 	--color-link: oklch(55.44% 0.0431 185.69);
 	--color-accent: oklch(55.27% 0.195 19.06);
@@ -37,6 +37,7 @@
 			--color-accent: oklch(70.91% 0.1415 163.7);
 			--color-accent-2: oklch(94.66% 0 0);
 			--color-quote: oklch(94.8% 0.106 136.49);
+			--theme-card-bg: #2d3748; /* 卡片背景色 (暗色) */
 			--theme-divider: #4a5568; /* 分割线颜色 (暗色) */
             --theme-text-light: #a0aec0; /* 描述文字颜色 (暗色) */
 		}
