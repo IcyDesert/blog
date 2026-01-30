@@ -37,6 +37,7 @@
 			--color-accent: oklch(70.91% 0.1415 163.7);
 			--color-accent-2: oklch(94.66% 0 0);
 			--color-quote: oklch(94.8% 0.106 136.49);
+			--theme-card-bg: #2d3748; /* 卡片背景色 (暗色) */
 			--theme-divider: #4a5568; /* 分割线颜色 (暗色) */
             --theme-text-light: #a0aec0; /* 描述文字颜色 (暗色) */
 		}
