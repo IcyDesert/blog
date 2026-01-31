@@ -8,7 +8,7 @@
 
 /* you could refactor below to use light-dark(), depending on your target audience */
 @theme {
-	--color-global-bg: oklch(98.47% 0.007 150);
+	--color-global-bg: oklch(98.47% 0.01 150);
 	--color-global-text: oklch(26.99% 0.0096 235.05);
 	--color-link: oklch(55.44% 0.0431 185.69);
 	--color-accent: oklch(55.27% 0.195 19.06);
