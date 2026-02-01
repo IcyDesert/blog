@@ -48,6 +48,10 @@ export default {
 							border: "1px dotted #666",
 							borderRadius: "2px",
 						},
+						h2: {
+							marginTop: "1em",
+							marginBottom: "0.75em",
+						},
 						kbd: {
 							"&:where([data-theme='dark'], [data-theme='dark'] *)": {
 								background: "var(--color-global-text)",
