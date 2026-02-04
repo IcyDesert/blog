@@ -1,0 +1,62 @@
+<button id="toggle-answers-btn" class="toggle-btn" type="button" aria-label="Toggle Answers">
+  Hide Answers
+</button>
+
+<script>
+  function setupToggle() {
+    const btn = document.getElementById('toggle-answers-btn');
+    if (!btn) return;
+
+    // Check saved preference
+    const isHidden = localStorage.getItem('hide-answers') === 'true';
+    if (isHidden) {
+      document.body.classList.add('hide-answers');
+      btn.textContent = "Show Answers";
+    }
+
+    btn.addEventListener('click', () => {
+      const wasHidden = document.body.classList.toggle('hide-answers');
+      localStorage.setItem('hide-answers', String(wasHidden));
+      btn.textContent = wasHidden ? "Show Answers" : "Hide Answers";
+    });
+  }
+
+  setupToggle();
+  // Support View Transitions if enabled
+  document.addEventListener('astro:page-load', setupToggle);
+</script>
+
+<style is:global>
+  body.hide-answers .answer-block {
+    filter: blur(8px);
+    opacity: 0.5;
+    pointer-events: none; /* Prevent selecting text while hidden */
+    transition: filter 0.3s ease, opacity 0.3s ease;
+  }
+</style>
+
+<style>
+  .toggle-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--theme-accent);
+    color: var(--theme-bg);
+    border: none;
+    border-radius: 9999px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  
+  .toggle-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  .toggle-btn:active {
+    transform: scale(0.95);
+  }
+</style>
