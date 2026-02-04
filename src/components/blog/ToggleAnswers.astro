@@ -27,17 +27,12 @@
 </script>
 
 <style is:global>
-  /* The class that will be applied to the answers */
   body.hide-answers .answer-block {
     filter: blur(8px);
     opacity: 0.5;
     pointer-events: none; /* Prevent selecting text while hidden */
     transition: filter 0.3s ease, opacity 0.3s ease;
   }
-  
-  /* Reveal on hover if desired, or just force toggle. 
-     User said "one click switch", so strict toggle is safer for memory training 
-     so they don't accidentally see it. */
 </style>
 
 <style>
