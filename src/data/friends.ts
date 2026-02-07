@@ -51,9 +51,9 @@ export const friends: Friend[] = [
 	},
 	{	
 		title: "Kokoro",
-		url: "https://github.com/Kokoro2336",
+		url: "blog.kokoro2336.site",
 		avatar: "https://avatars.githubusercontent.com/u/136730884?v=4",
-		description: "可可萝的Github主页，并非博客",
+		description: "Never give up control.",
 	}
 ];
 
