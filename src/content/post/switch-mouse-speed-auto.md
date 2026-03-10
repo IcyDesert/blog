@@ -2,7 +2,7 @@
 title: "多蓝牙鼠标切换时自动更新系统灵敏度"
 description: "AI coding 成功案例"
 publishDate: "05 Sep 2025"
-updatedDate: "08 Sep 2025"
+updatedDate: "10 Mar 2026"
 tags: ["auto", "折腾"]
 ---
 
@@ -25,6 +25,10 @@ tags: ["auto", "折腾"]
 > 2. 通过某个系统接口调节灵敏度，但是不知道是哪个接口
 
 可以看到我一开始的思路构想还是非常清晰的，只不过对实现细节没有了解；后续 AI 也是从头到尾都完全按照我的思路去实现。
+
+:::note
+现在绝赞体验 Fedora 43 KDE Plasma 中，原来 KDE 桌面设置可以独立设置不同设备的灵敏度，这篇文章就相当于重造轮子了。都来用 KDE！
+:::
 
 ## 实现
 
@@ -212,10 +216,10 @@ sudo -u "$USERNAME" DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY /usr/bin/xinput set-
 2. 修改规则集。监测到事件后，只需要执行上面脚本。
 ```txt
 # filepath: /etc/udev/rules.d/99-bluetooth-mouse.rules
-# teaching building, older one: CD23 C
+# teaching building, older one
 ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="teac", RUN+="/usr/local/bin/set-mouse-speed.sh 'teac' '-0.20'"
 
-# dorm, newer one: CD23 SE
+# dorm, newer one
 ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="dorm", RUN+="/usr/local/bin/set-mouse-speed.sh 'dorm' '0.80'"
 ```
 
