@@ -20,7 +20,15 @@ const _quotes_: string[] = [
     "Copilot enabled!",
     "何意味？",
     "禁飞区！",
-    "现实建模的有向有环加权图最低分数测试工程师"
+    "现实建模的有向有环加权图最低分数测试工程师",
+    "心里的雨倾盆而下",
+    "去年的圣诞卡",
+    "Test Driven Development!",
+    "Also try Fedora!",
+    "Also try Arch!",
+    "Quasi-connectivity is useful!",
+    "怎么 QC 激活了？",
+    "BUD is useful!",
 ]
 
 export const _quotes = Buffer.from(JSON.stringify(_quotes_)).toString('base64');
