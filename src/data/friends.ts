@@ -54,6 +54,12 @@ export const friends: Friend[] = [
 		url: "https://blog.kokoro2336.site",
 		avatar: "https://avatars.githubusercontent.com/u/136730884?v=4",
 		description: "Never give up control.",
+	},
+	{	
+		title: "SoraShu",
+		url: "https://blog.sorashu.moe/",
+		avatar: "https://blog.sorashu.moe/favicon.jpg",
+		description: "",
 	}
 ];
 
