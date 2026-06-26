@@ -60,6 +60,12 @@ export const friends: Friend[] = [
 		url: "https://blog.sorashu.moe/",
 		avatar: "https://blog.sorashu.moe/favicon.jpg",
 		description: "",
+	},
+	{	
+		title: "茶靡",
+		url: "https://chami537.github.io/",
+		avatar: "/linkx/chami537.webp",
+		description: "奶龙爱好者兼摄影师",
 	}
 ];
 
@@ -67,7 +73,7 @@ export const communities: Friend[] = [
 	{
 		title: "HITSZ 课程攻略共享计划",
 		description: "一份全面的课程攻略 欢迎关注!",
-		avatar: "https://hoa.moe/images/logo.webp",
+		avatar: "https://hoa.moe/icons/favicon-light.png",
 		url: "https://hoa.moe/",
 	},
 	{
