@@ -66,6 +66,12 @@ export const friends: Friend[] = [
 		url: "https://chami537.github.io/",
 		avatar: "/linkx/chami537.webp",
 		description: "奶龙爱好者兼摄影师",
+	},
+	{
+		title: "HighIQ666",
+		url: "https://highiq666.github.io",
+		avatar: "https://avatars.githubusercontent.com/u/221370732?v=4",
+		description: "Blog web of HighIQ666.",
 	}
 ];
 
