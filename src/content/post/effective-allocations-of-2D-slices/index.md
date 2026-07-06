@@ -126,13 +126,11 @@ BenchmarkSeparate_1024x128-20               2835            366887 ns/op        
 BenchmarkContiguous_1024x128-20             3115            388539 ns/op         1075842 B/op          2 allocs/op
 ```
 
-测试的结论**几乎**也能支持我们的直观感受：C 布局的每一轮分配总时长，几乎都比 S 布局短，在 1024x1024 方阵上二者的分配速率比甚至达到了 1:4.3。而最终分配的内存大小几乎相同。
+测试的结论几乎也能支持我们的直观感受：C 布局的每一轮分配总时长，**几乎**都比 S 布局短，在 1024x1024 方阵上二者的分配速率比甚至达到了 1:4.3。而最终分配的内存大小相同。
 
-### 额外结论
+### 有意思的现象：
 
-有两个很有意思的现象：
-
-1. 行较少的非方阵，两个布局分配速率差距不大；行越多，C 布局的优势越明显。
+1. 行较少时两个布局分配速率差距不大；行越多，C 布局的优势越明显。
 	为了验证这个现象我又跑了另一组测试，行列乘积（分配数据量）相同，但行列比例不同的测试：
 
 <details>
@@ -170,4 +168,73 @@ BenchmarkAlloc/1024x1024/Contiguous-20              1310            791561 ns/op
 2. `1024x128` 的非方阵，C 布局的分配速率反而比 S 布局慢。后来做了重复实验，发现这可能是波动导致的，总体来看，在这个测试用例上 C 布局的分配速率比 S 布局快。
    但似乎 C 布局的波动频率很高，在我做的 6 次实验中就出现了两次「异常」值——大多数测例是 ~250000 ns/op ，而这两次异常值分别是 388539 ns/op、420749 ns/op。
 
-## 汇编分析
+## 动态分析
+
+首先单独跑两个测试用例
+
+```bash
+$ go test -run=^$ -bench='^BenchmarkAlloc/2048x2048/Contiguous$' -benchtime=500x -count=1 -cpuprofile=cpu_c2048.out -memprofile=mem_c2048.out -o bench_c2048.test
+
+$ go test -run=^$ -bench='^BenchmarkAlloc/2048x2048/Separate$' -benchtime=500x -count=1 -cpuprofile=cpu_s2048.out -memprofile=mem_s2048.out -o bench_s2048.test
+```
+
+S 布局用时3.51s，C 布局用时 1.81s。与之前结论一致。（但这部分差别并不大，$(3.51-1.81)/500 = 0.0034$，也就是，在这个量级下每一轮的差距不到 3 毫秒。这可能也是力扣 OJ 上看不出差别的原因）
+
+分析调用链上最耗时的函数，使用 `-flat` 参数：
+
+```bash
+go tool pprof -top -flat ./bench_c2048.test cpu_c2048.out
+File: bench_c2048.test
+      flat  flat%   sum%        cum   cum%
+     1.56s 80.00% 80.00%      1.56s 80.00%  runtime.memclrNoHeapPointers
+     0.07s  3.59% 83.59%      0.07s  3.59%  runtime.madvise
+     0.02s  1.03% 84.62%      0.02s  1.03%  runtime.(*mheap).setSpans
+     0.02s  1.03% 85.64%      0.02s  1.03%  runtime.(*unwinder).resolveInternal
+     0.02s  1.03% 86.67%      0.02s  1.03%  runtime.forEachPInternal
+     0.02s  1.03% 87.69%      0.02s  1.03%  runtime.futex
+	 (......)
+```
+
+```bash
+$ go tool pprof -top -flat ./bench_s2048.test cpu_s2048.out
+File: bench_s2048.test
+
+      flat  flat%   sum%        cum   cum%
+     1.58s 32.99% 32.99%      1.58s 32.99%  runtime.memclrNoHeapPointers
+     0.25s  5.22% 38.20%      0.25s  5.22%  runtime.madvise
+     0.24s  5.01% 43.22%      0.24s  5.01%  runtime.(*mcentral).partialSwept (inline)
+     0.22s  4.59% 47.81%      0.22s  4.59%  runtime.procyield
+     0.18s  3.76% 51.57%      0.97s 20.25%  runtime.(*sweepLocked).sweep
+     0.13s  2.71% 54.28%      0.13s  2.71%  internal/runtime/atomic.(*Uint32).Add (inline)
+     0.13s  2.71% 56.99%      0.18s  3.76%  runtime.(*spanSet).push
+     0.12s  2.51% 59.50%      0.12s  2.51%  runtime.headTailIndex.head (inline)
+     0.10s  2.09% 61.59%      0.10s  2.09%  runtime.(*gcBitsArena).tryAlloc (inline)
+     0.10s  2.09% 63.67%      0.11s  2.30%  runtime.(*pallocBits).summarize
+     0.08s  1.67% 65.34%      0.31s  6.47%  runtime.(*mheap).freeSpanLocked
+     0.08s  1.67% 67.01%      0.08s  1.67%  runtime.(*mspan).base (inline)
+     0.07s  1.46% 68.48%      0.07s  1.46%  runtime.futex
+	 (......)
+```
+
+观察到两个有意思的现象：
+
+1. 两边的耗时大头都是 `runtime.memclrNoHeapPointers`，这是 Go 运行时在清零内存块，代表了申请新的内存。但两种布局的耗时分别为 1.56s/1.58s，差距不大。这说明，C 布局的**优势并不在于初始化内存**的速度。（这个函数在源码中是用汇编指令写就的）
+
+2. 虽然运行时间相近，但 S 布局上 `runtime.memclrNoHeapPointers` 占时长比例仅 32.99%，C 布局上占时长比例高达 80.00%，说明这两种布局的时间差不在分配内存，而是另有其他耗时部分。
+   
+   对比上面两个 top 的结果，结合 S 布局的调用图 ![GC 相关的调用图](pic/s2048_gc.png)
+   可以看出，`runtime.madvise`（向操作系统归还内存）、`runtime.(*sweepLocked).sweep`（并发清扫函数，GC 的一个步骤）等函数在 S 布局上耗时明显高于 C 布局。也就是说，S 布局的额外开销在于 GC 相关的函数，这部分的占比并不比申请内存部分低。
+
+## 结论与讨论
+
+到这里，结论就很明确了：C 布局相对于 S 布局的优势，**是 GC 相关的开销更低**，而不是调用 `makeSlice` 分配的开销更低。这个结论与我猜想的还是有挺大区别毕竟从代码上看，S 布局最大的特点就是频繁申请切片内存
+
+至于我们之前提过的「切片操作本质上是腾挪指针」，并没有在上述测试中体现出来。使用 `$ go tool objdump -s "allocContiguous" bench_c2048.test` 来查看汇编指令，在` dp[i], underlay = underlay[:n], underlay[n:]` 这一行，让 AI 大人帮笔者查阅（因为对汇编知之甚少），确实是在做我们的切分操作，包括计算指针地址、修改切片的 len 和 cap 等等。
+
+当然，其中出现了
+```asm
+CALL runtime.gcWriteBarrier2(SB)
+CALL runtime.panicSliceB(SB)
+CALL runtime.panicSliceAcap(SB)
+```
+等函数调用，但从动态分析来看，这些函数并没有被调用。
