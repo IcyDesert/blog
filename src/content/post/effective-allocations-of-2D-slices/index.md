@@ -43,7 +43,7 @@ for i := range dp {
 - S 布局需要调用 m+1 次 make 函数来分配内存，但每一行的切片直接指向每次 make 分配的内存块
 - C 布局需要调用一次 make 函数，但需要 m+1 次切片操作来分配每一行
 
-直觉上，make 函数的调用开销应该比切片操作大。make 函数涉及在堆上分配内存，大概率有系统调用、与 GC 打交道之类的耗时指令；相比之下，Go 中的切片数据由指针表示，切片操作本质上是腾挪指针，要比调用 make 函数分配内存快得多：
+直觉上，make 函数的调用开销应该比切片操作大。make 函数涉及在堆上分配内存，可能有系统调用、与 GC 打交道之类的耗时指令；相比之下，Go 中的切片数据核心是指针表示，切片操作本质上是腾挪指针和修改数值，要比调用 make 函数分配内存快得多：
 
 ```go
 // src/runtime/slice.go
@@ -57,6 +57,11 @@ type slice struct {
 也就是说，C 布局的运行开销应该比 S 布局小。但这只是直观感受，实际情况如何呢？
 
 ## Benchmark
+
+```bash
+$ go version         
+go version go1.24.12 linux/amd64
+```
 
 ```go
 func allocSeparate(m, n int) [][]int {
@@ -88,6 +93,8 @@ func benchAlloc(b *testing.B, fn func(int, int) [][]int, m, n int) {
 并设置多组方阵和非方阵测试数据，分别对应不同规模的二维切片分配。
 
 <details>
+
+<summary>测试数据规模</summary>
 
 ```go
 var allocCases = []benchCase{
@@ -128,14 +135,16 @@ BenchmarkAlloc/1024x128/Separate-20         5060            317356 ns/op        
 BenchmarkAlloc/1024x128/Contiguous-20       8068            335319 ns/op         1075842 B/op          2 allocs/op
 ```
 
-测试的结论几乎也能支持我们的直观感受：C 布局的每一轮分配总时长，**几乎**都比 S 布局短，在 1024x1024 方阵上二者的分配速率比甚至达到了 1: 4.3。而最终分配的内存大小相同。
+测试的结论几乎也能支持我们的直观感受：C 布局的每一轮分配总时长，**几乎**都比 S 布局短，在 1024x1024 方阵上二者的运行时间比甚至达到了 1: 3.3。而最终分配的内存大小相同。
 
 ### 有意思的现象：
 
 1. 行较少时两个布局分配速率差距不大；行越多，C 布局的优势越明显。
-	为了验证这个现象我又跑了另一组测试，行数不同，但列数相同，结果如下：
+	为了验证这个现象我又跑了另一组测试，结果如下：
 
 	<details>
+
+	<summary>行数不同，但列数相同的 Benchmark 数据</summary>
 
 	```bash
 	$ go test -bench=. -benchmem slice2d_row_test.go
@@ -161,9 +170,41 @@ BenchmarkAlloc/1024x128/Contiguous-20       8068            335319 ns/op        
 
 	结果从趋势上支持我们的结论。
 
-2. `1024x128` 的非方阵，C 布局的分配速率反而比 S 布局慢。后来做了重复实验，发现这可能是波动导致的，总体来看，在这个测试用例上 C 布局的分配速率比 S 布局快。
+2. `1024x128` 的非方阵，C 布局的分配速率反而比 S 布局慢。对这个点，C 布局和 S 布局分别测试 20 次并分析，结论是：总体上这个测试点的 C 布局的运行时间更短；但 C 布局存在明显的阶段性波动。
 
-   但似乎 C 布局的波动频率很高，在我做的十几次实验中就出现了两次「异常」值——大多数测例是 ~250000 ns/op ，而这两次异常值分别是 388539 ns/op、420749 ns/op。
+   ```
+   Alloc/1024x128/Separate-20    360.9µ ± 3%
+   Alloc/1024x128/Contiguous-20     252.1µ ± 27%
+   ```
+
+   <details>
+
+   <summary>C 布局的波动数据</summary>
+
+   ```bash
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4498	    224941 ns/op	 1075849 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4450	    245386 ns/op	 1075843 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4822	    233398 ns/op	 1075844 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    7161	    243204 ns/op	 1075845 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4740	    244807 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4336	    250888 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4953	    266640 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    3746	    299419 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4813	    251891 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    5493	    269371 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4380	    252351 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4200	    251041 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    3753	    329978 ns/op	 1075841 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4107	    342029 ns/op	 1075841 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    3460	    336196 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    3196	    354317 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    3277	    329774 ns/op	 1075841 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    3519	    319312 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4898	    247599 ns/op	 1075842 B/op	       2 allocs/op
+	BenchmarkAlloc/1024x128/Contiguous-20         	    4323	    251800 ns/op	 1075842 B/op	       2 allocs/op
+	```
+
+   </details>
 
 ## 动态分析
 
@@ -177,7 +218,7 @@ $ go test -run=^$ -bench='^BenchmarkAlloc/2048x2048/Contiguous$' -benchtime=500x
 $ go test -run=^$ -bench='^BenchmarkAlloc/2048x2048/Separate$' -benchtime=500x -count=1 -cpuprofile=cpu_s2048.out -memprofile=mem_s2048.out -o bench_s2048.test
 ```
 
-S 布局用时 3.51s，C 布局用时 1.81s，与之前结论一致。（但这部分差别并不大，$(3.51-1.81)/500 = 0.0034$，也就是，在这个量级下每一轮的差距不到 3 毫秒。**这可能也是力扣 OJ 上看不出差别的原因**）
+S 布局用时 3.51s，C 布局用时 1.81s，与之前结论一致。（但这部分差别并不大，$(3.51-1.81)/500 = 0.0034$，也就是，在这个量级下每一轮的差距大约 3 毫秒。**这可能也是力扣 OJ 上看不出差别的原因**）
 
 ### 调用链分析
 
@@ -220,27 +261,45 @@ File: bench_c2048.test
 
 1. 两边的耗时大头都是 `runtime.memclrNoHeapPointers`，这是 Go 运行时在清理内存，代表着新内存的分配。但两种布局的耗时分别为 1.56s/1.58s，差距不大。这说明，C 布局的**优势并不在于初始化内存**的速度。（顺带一提，这个函数在源码中是用汇编指令写就的）
 
-2. 虽然 `runtime.memclrNoHeapPointers` 在两种布局上运行时间相近，但 S 布局上其比例仅占 32.99%，C 布局上占时长比例高达 80.00%，说明这两种布局的时间差不在分配内存，而是另有其他耗时部分。
+2. 虽然 `runtime.memclrNoHeapPointers` 在两种布局上运行时间相近，但 S 布局上其比例仅占 32.99%，C 布局上占时长比例高达 80.00%，说明**另有其他耗时**部分影响了 S 布局。
    
    对比上面两个 top 的结果，结合 S 布局的调用图 ![S 布局的GC 相关函数调用图](pic/s2048_gc.png)
-   可以看出，`runtime.madvise`（向操作系统归还内存）、`runtime.(*sweepLocked).sweep`（并发清扫函数，GC 的一个步骤）等函数在 S 布局上耗时明显高于 C 布局。也就是说，S 布局的**额外开销在于 GC** 相关的函数；结合 `sum%` 数据看出，这部分的耗时并不比申请内存部分低。
+   可以看出，S 布局的 `runtime.madvise`（向操作系统归还内存）、`runtime.(*sweepLocked).sweep`（并发清扫函数，GC 的一个步骤）等函数耗时明显高于 C 布局。也就是说，S 布局的额外开销更多**在于 GC、分配器** 相关的函数。
 
 ## 结论
 
-到这里，结论就很明确了：C 布局相对于 S 布局的优势，**是 GC 相关的开销更低**，而不是 `makeSlice` 等分配内存的开销——后者在两种布局中相近。这个结论与我猜想的还是有挺大区别——毕竟从代码上看，S 布局最大的特点就是频繁申请切片内存。
+到这里，结论就大致明确了：C 布局相对于 S 布局的优势，并非初始化内存的开销——其在两种布局中相近——而可能在于 **GC、分配器的开销更低**。
+
+但 C 布局也有使用限制。一个是
+
+> If the slices might not grow or shrink
+
+这个前提条件不满足，那就不适合使用 C 布局了。所以本文 C 布局的例子就是二维 DP，数组大小是固定的；Effective Go 的例子也是一个固定大小的图片-像素处理。
+
+另一个是官方推荐写法的小问题：
+
+```go
+dp[i], underlay = underlay[:n], underlay[n:]
+```
+得到的 `dp[i]` 的容量是 `underlay[:n]` 的容量，而不是 n；如果用 
+
+```go
+dp[i], underlay = underlay[:n:n], underlay[n:]
+```
+就是 n 了。
 
 ## 讨论
 
-我们之前提过「切片操作本质上是腾挪指针」，并没有在上述测试中体现出来。
+### 浅显的汇编分析
+
+之前提过「切片操作本质上是腾挪指针」，并没有在上述测试中体现出来。
 
 使用 `$ go tool objdump -s "allocContiguous" bench_c2048.test` 来查看汇编指令，在` dp[i], underlay = underlay[:n], underlay[n:]` 这一行，让 AI 大人帮笔者查阅（因为对汇编知之甚少），确实是在做我们的切分操作，包括计算指针地址、修改切片的 len 和 cap 等等。
 
-当然，其中出现了
-```asm
-CALL runtime.gcWriteBarrier2(SB)
-CALL runtime.panicSliceB(SB)
-CALL runtime.panicSliceAcap(SB)
-```
-等函数调用，但从动态分析来看，这些函数并没有被调用。
+### 命名严谨吗？
 
-另外是关于命名的问题。
+虽然看上去，S 布局是分配随机内存、「非连续」的，但笔者做过实测，打印每一行的地址，其依然可能连续。256、1024 大小的切片，分配的内存地址是连续的；而 1433 这样大小的切片，分配的内存地址就不连续了。这是否是语言层面的保证，还是本机特性，值得一篇新的博客~~挖坑~~。总之，S 布局不一定是非连续的，但 C 布局一定是连续的。
+
+### 波动
+
+似乎有一些矩阵规格存在阶段性波动，比如先前所述 1024x128，原因未知。~~挖坑~~
