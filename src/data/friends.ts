@@ -72,6 +72,12 @@ export const friends: Friend[] = [
 		url: "https://highiq666.github.io",
 		avatar: "https://avatars.githubusercontent.com/u/221370732?v=4",
 		description: "Blog web of HighIQ666.",
+	},
+	{
+		title: "小帕的小窝",
+		url: "https://passthem.top/",
+		avatar: "https://passthem.top/_image?href=%2F_astro%2Fpassthem.BIjTNsXC.png&w=360&h=360&f=webp",
+		description: "不会做音 MAD 的 MC 速通玩家不是一个好的程序员",
 	}
 ];
 
