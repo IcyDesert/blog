@@ -59,7 +59,7 @@
 		"rehype-katex": "^7.0.1",
 		"remark-math": "^6.0.0",
 		"tailwindcss": "4.1.13",
-		"typescript": "^5.8.3"
+		"typescript": "^5.9.3"
 	},
 	"pnpm": {
 		"overrides": {
